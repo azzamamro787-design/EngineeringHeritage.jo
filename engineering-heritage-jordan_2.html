@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Heritage Jordan — هندسة الأجداد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#17140F;
+    --bg-panel:#211C15;
+    --bg-panel-2:#28221A;
+    --stone:#B3654A;
+    --water:#4C8A7E;
+    --bronze:#C79A4B;
+    --parchment:#EDE3CF;
+    --muted:#948A78;
+    --line:#3A3428;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-deep);
+    color:var(--parchment);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:300;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--stone); color:var(--bg-deep);}
+
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+
+  /* ---------- texture ---------- */
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 32px; font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+    background:linear-gradient(to bottom, rgba(23,20,15,.92), transparent);
+  }
+  nav .mark{color:var(--parchment); font-family:'Spectral', serif; font-style:italic; font-size:15px; letter-spacing:0;}
+  nav .links{display:flex; gap:28px;}
+  nav a{color:var(--muted); text-decoration:none; transition:color .25s;}
+  nav a:hover{color:var(--bronze);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    position:relative; padding:140px 32px 80px;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0; z-index:-1;
+    background:
+      radial-gradient(ellipse 900px 500px at 80% 10%, rgba(179,101,74,.14), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 10% 90%, rgba(76,138,126,.10), transparent 60%);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--water); margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:28px; height:1px; background:var(--water);}
+  h1.title{
+    font-family:'Spectral', serif; font-weight:300; font-size:clamp(42px, 8vw, 96px);
+    line-height:1.02; letter-spacing:-.01em; max-width:880px;
+  }
+  h1.title em{font-style:italic; font-weight:600; color:var(--stone);}
+  .title-ar{
+    font-family:'Amiri', serif; direction:rtl; font-size:clamp(24px, 3.6vw, 34px); color:var(--bronze);
+    margin-top:14px; letter-spacing:.01em;
+  }
+  .hero-sub{
+    max-width:560px; margin-top:34px; color:var(--muted); font-size:17px; font-weight:300; line-height:1.75;
+  }
+  .hero-sub strong{color:var(--parchment); font-weight:500;}
+  .scroll-cue{
+    margin-top:60px; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted);
+    display:flex; align-items:center; gap:10px; letter-spacing:.1em; text-transform:uppercase;
+  }
+  .scroll-cue .bar{width:1px; height:34px; background:linear-gradient(var(--bronze), transparent); animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:.3} 50%{opacity:1}}
+
+  /* ---------- stat strip ---------- */
+  .stats{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    display:grid; grid-template-columns:repeat(3,1fr);
+  }
+  .stat{padding:34px 32px; border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Spectral', serif; font-size:38px; color:var(--stone); font-weight:400;}
+  .stat .lbl{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-top:6px;}
+
+  /* ---------- thesis ---------- */
+  .thesis{padding:110px 32px; }
+  .thesis-inner{max-width:760px; margin:0 auto; text-align:center;}
+  .thesis p{font-family:'Spectral', serif; font-size:clamp(22px,3vw,30px); font-weight:300; line-height:1.55; color:var(--parchment);}
+  .thesis p .hl{color:var(--water); font-style:italic;}
+
+  /* ---------- case sections ---------- */
+  .case{padding:100px 32px; border-top:1px solid var(--line); position:relative;}
+  .case-grid{
+    max-width:1120px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;
+  }
+  .case.reverse .case-grid > *:first-child{order:2;}
+  .case.reverse .case-grid > *:last-child{order:1;}
+  .case-coord{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--water); letter-spacing:.05em; margin-bottom:16px;
+  }
+  .case h2{
+    font-family:'Spectral', serif; font-weight:400; font-size:clamp(30px,4vw,44px); line-height:1.1; color:var(--parchment);
+  }
+  .case h2 .site-en{display:block;}
+  .case .era{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--bronze); margin-top:10px; letter-spacing:.04em;
+  }
+  .case p.body-text{margin-top:22px; color:var(--muted); font-size:15.5px; line-height:1.8; font-weight:300;}
+  .case p.body-text strong{color:var(--parchment); font-weight:500;}
+
+  .notebook{
+    margin-top:28px; background:var(--bg-panel); border:1px solid var(--line); border-radius:2px;
+    padding:22px 24px;
+  }
+  .notebook .nb-title{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--stone); margin-bottom:12px;
+  }
+  .notebook ul{list-style:none;}
+  .notebook li{
+    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--muted); padding:6px 0;
+    border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:16px;
+  }
+  .notebook li:first-child{border-top:none;}
+  .notebook li span:last-child{color:var(--parchment);}
+
+  .diagram-box{
+    background:var(--bg-panel-2); border:1px solid var(--line); border-radius:2px; padding:28px;
+    aspect-ratio:1/0.85; display:flex; align-items:center; justify-content:center;
+  }
+  .diagram-box svg{width:100%; height:100%;}
+  .diagram-cap{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--muted); text-align:center;
+    margin-top:10px; letter-spacing:.04em;
+  }
+
+  /* ---------- mission ---------- */
+  .mission{padding:120px 32px; border-top:1px solid var(--line); background:var(--bg-panel);}
+  .mission-inner{max-width:720px; margin:0 auto;}
+  .mission .eyebrow{color:var(--stone);}
+  .mission .eyebrow::before{background:var(--stone);}
+  .mission h2{font-family:'Spectral', serif; font-size:clamp(28px,4vw,40px); font-weight:400; line-height:1.2; margin-bottom:24px;}
+  .mission p{color:var(--muted); font-size:15.5px; line-height:1.85; margin-bottom:16px;}
+  .mission p strong{color:var(--parchment); font-weight:500;}
+  .roadmap{margin-top:40px; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);}
+  .roadmap div{background:var(--bg-panel); padding:20px 18px;}
+  .roadmap .rm-lbl{font-family:'IBM Plex Mono', monospace; font-size:10px; color:var(--water); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px;}
+  .roadmap .rm-txt{font-size:13.5px; color:var(--muted); line-height:1.6;}
+
+  /* ---------- footer ---------- */
+  footer{padding:50px 32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--muted); letter-spacing:.04em;}
+  footer .mark-ar{font-family:'Amiri', serif; direction:rtl; color:var(--bronze); font-size:15px;}
+
+  [data-reveal]{opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s ease;}
+  [data-reveal].visible{opacity:1; transform:none;}
+
+  #mech-canvas{width:100%; height:100%; display:block; touch-action:none;}
+  .mech-readout{
+    position:absolute; top:14px; left:14px; font-family:'IBM Plex Mono', monospace; font-size:11px;
+    color:var(--muted); background:rgba(23,20,15,.55); backdrop-filter:blur(3px);
+    border:1px solid var(--line); padding:10px 12px; border-radius:2px; pointer-events:none;
+  }
+  .mech-readout div{display:flex; justify-content:space-between; gap:18px; padding:2px 0;}
+  .mech-readout b{color:var(--bronze); font-weight:500;}
+  .mech-btn{
+    position:absolute; bottom:14px; right:14px; width:32px; height:32px; border-radius:50%;
+    background:rgba(23,20,15,.6); border:1px solid var(--line); color:var(--parchment);
+    font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s;
+  }
+  .mech-btn:hover{border-color:var(--bronze);}
+
+  .lang-btn{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--bronze); background:transparent; border:1px solid var(--line); border-radius:20px;
+    padding:6px 14px; cursor:pointer; transition:border-color .2s, color .2s;
+  }
+  .lang-btn:hover{border-color:var(--bronze); color:var(--parchment);}
+
+  body.lang-ar{font-family:'IBM Plex Sans Arabic', sans-serif;}
+  body.lang-ar h1.title, body.lang-ar .case h2, body.lang-ar .mission h2, body.lang-ar .thesis p{
+    font-family:'Amiri', serif;
+  }
+  body.lang-ar h1.title{
+    font-size:clamp(30px, 5.4vw, 60px); line-height:1.35;
+  }
+  body.lang-ar .eyebrow, body.lang-ar .case-coord, body.lang-ar .era, body.lang-ar .notebook,
+  body.lang-ar .nb-title, body.lang-ar .notebook li, body.lang-ar .stat .lbl, body.lang-ar .diagram-cap,
+  body.lang-ar .mech-readout, body.lang-ar nav, body.lang-ar footer, body.lang-ar .rm-lbl, body.lang-ar .scroll-cue{
+    font-family:'IBM Plex Sans Arabic', sans-serif; letter-spacing:0;
+  }
+  body.lang-ar .stat .num{font-family:'Amiri', serif;}
+  body.lang-ar .notebook li{flex-direction:row-reverse;}
+  body.lang-ar .title-ar{font-family:'Spectral', serif; font-style:italic; direction:ltr; text-align:left;}
+
+  @media (max-width:820px){
+    .case-grid{grid-template-columns:1fr; gap:36px;}
+    .case.reverse .case-grid > *{order:0;}
+    .stats{grid-template-columns:1fr;}
+    .stat{border-right:none; border-bottom:1px solid var(--line);}
+    .roadmap{grid-template-columns:1fr;}
+    nav .links{display:none;}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<nav>
+  <div class="mark">Engineering Heritage Jordan</div>
+  <div class="links">
+    <a href="#petra" data-i18n="nav-petra">Petra</a>
+    <a href="#qanat" data-i18n="nav-qanat">Qanat Fir'aun</a>
+    <a href="#jerash" data-i18n="nav-jerash">Jerash</a>
+    <a href="#mission" data-i18n="nav-about">About</a>
+    <button id="lang-toggle" class="lang-btn" type="button">العربية</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow" data-i18n="hero-eyebrow">An Engineer's Atlas of Ancient Jordan</div>
+  <h1 class="title" data-i18n="hero-title">Before the textbooks, <em>Jordan built the machines.</em></h1>
+  <div class="title-ar" data-i18n="hero-title-ar">هندسة الأجداد — أرشيف هندسي لمنجزات الأجداد الميكانيكية والهيدروليكية</div>
+  <p class="hero-sub" data-i18n="hero-sub">
+    A field-by-field engineering survey of the water systems, tunnels, and machines built across
+    Jordan between 300 BCE and 600 CE — read the way a <strong>mechanical engineer</strong> reads them:
+    through slope, torque, tolerance, and load.
+  </p>
+  <div class="scroll-cue"><div class="bar"></div><span data-i18n="scroll-cue">Three sites, so far</span></div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="num" data-i18n="stat1-num">170 km</div><div class="lbl" data-i18n="stat1-lbl">Longest known tunnel of antiquity</div></div>
+  <div class="stat"><div class="num" data-i18n="stat2-num">30,000+</div><div class="lbl" data-i18n="stat2-lbl">People supplied by gravity alone, no pumps</div></div>
+  <div class="stat"><div class="num" data-i18n="stat3-num">6th c. CE</div><div class="lbl" data-i18n="stat3-lbl">Earliest known crank-slider mechanism, Jerash</div></div>
+</div>
+
+<section class="thesis">
+  <div class="thesis-inner" data-reveal>
+    <p data-i18n="thesis-p">Every site here was designed by someone solving the same problems we're taught to solve today —
+    <span class="hl">how to move a fluid, transmit a force, or convert motion</span> — centuries before the
+    vocabulary existed to name what they'd done.</p>
+  </div>
+</section>
+
+<!-- ================= PETRA ================= -->
+<section class="case" id="petra">
+  <div class="case-grid">
+    <div data-reveal>
+      <div class="case-coord" data-i18n="petra-coord">30.3285°N, 35.4444°E — Ma'an Governorate</div>
+      <h2><span class="site-en" data-i18n="petra-title">The Petra Water System</span></h2>
+      <div class="era" data-i18n="petra-era">Nabataean · c. 300 BCE – 300 CE</div>
+      <p class="body-text" data-i18n="petra-p1">
+        Petra sits in a desert basin that receives almost no reliable rainfall — yet it sustained
+        <strong>a city of roughly 30,000 people</strong>. The Nabataeans solved this with a distribution
+        network, not a single structure: hillside catchment channels fed sandstone cisterns sealed
+        with a waterproof gypsum-lime plaster, diversion dams pulled destructive flash floods away
+        from the city center and into storage, and rock-cut or terracotta pipelines carried water
+        for kilometers into the urban core.
+      </p>
+      <p class="body-text" data-i18n="petra-p2">
+        The detail that reads as pure engineering: pipeline <strong>gradients were deliberately matched
+        to each spring's natural output</strong>, so the system moved exactly as much water as the source
+        could sustainably give — fast enough to stay usable, slow enough to avoid erosion and leakage.
+        No pumps, no external energy input. Just topography, read correctly.
+      </p>
+      <div class="notebook">
+        <div class="nb-title" data-i18n="nb-title">Engineering Notebook</div>
+        <ul>
+          <li data-i18n="petra-nb1"><span>Mechanism</span><span>Gravity-fed open channel + closed pipeline</span></li>
+          <li data-i18n="petra-nb2"><span>Design constraint</span><span>Flow matched to spring yield</span></li>
+          <li data-i18n="petra-nb3"><span>Failure mode addressed</span><span>Flash flood diversion via barrage dams</span></li>
+          <li data-i18n="petra-nb4"><span>Sealing method</span><span>Gypsum-lime hydraulic plaster</span></li>
+        </ul>
+      </div>
+    </div>
+    <div data-reveal>
+      <div class="diagram-box">
+        <svg viewBox="0 0 400 340" fill="none">
+          <path d="M20 60 L120 40 L240 90 L340 70" stroke="#4C8A7E" stroke-width="2"/>
+          <text x="24" y="48" fill="#948A78" font-family="IBM Plex Mono" font-size="9">catchment ridge</text>
+          <path d="M120 40 L120 130" stroke="#3A3428" stroke-width="1" stroke-dasharray="3 3"/>
+          <rect x="90" y="130" width="60" height="50" rx="2" stroke="#C79A4B" stroke-width="1.5"/>
+          <text x="93" y="122" fill="#C79A4B" font-family="IBM Plex Mono" font-size="9">diversion dam</text>
+          <path d="M150 155 C 200 150, 220 200, 200 240" stroke="#4C8A7E" stroke-width="2"/>
+          <ellipse cx="185" cy="255" rx="42" ry="26" stroke="#B3654A" stroke-width="1.5"/>
+          <text x="150" y="298" fill="#B3654A" font-family="IBM Plex Mono" font-size="9">sealed cistern</text>
+          <path d="M225 250 L 320 250" stroke="#EDE3CF" stroke-width="1.5" stroke-dasharray="1 4"/>
+          <text x="240" y="270" fill="#948A78" font-family="IBM Plex Mono" font-size="9">graded pipeline → city</text>
+          <path d="M240 90 L 240 250" stroke="#3A3428" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="248" y="170" fill="#948A78" font-family="IBM Plex Mono" font-size="9" transform="rotate(90 248 170)">slope ≈ spring yield</text>
+        </svg>
+      </div>
+      <div class="diagram-cap" data-i18n="petra-cap">Schematic — catchment → diversion → sealed storage → graded delivery</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QANAT FIR'AUN ================= -->
+<section class="case reverse" id="qanat">
+  <div class="case-grid">
+    <div data-reveal>
+      <div class="diagram-box">
+        <svg viewBox="0 0 400 340" fill="none">
+          <line x1="20" y1="300" x2="380" y2="300" stroke="#3A3428" stroke-width="1"/>
+          <g stroke="#4C8A7E" stroke-width="1.5">
+            <line x1="60" y1="60" x2="60" y2="300"/>
+            <line x1="140" y1="80" x2="140" y2="300"/>
+            <line x1="220" y1="70" x2="220" y2="300"/>
+            <line x1="300" y1="90" x2="300" y2="300"/>
+          </g>
+          <g fill="#4C8A7E">
+            <circle cx="60" cy="60" r="4"/><circle cx="140" cy="80" r="4"/>
+            <circle cx="220" cy="70" r="4"/><circle cx="300" cy="90" r="4"/>
+          </g>
+          <path d="M60 300 C 100 296, 120 292, 140 300 S 200 296, 220 300 S 280 294, 300 300" stroke="#C79A4B" stroke-width="2"/>
+          <text x="20" y="320" fill="#948A78" font-family="IBM Plex Mono" font-size="9">shafts sunk from surface</text>
+          <text x="60" y="45" fill="#948A78" font-family="IBM Plex Mono" font-size="9">access / spoil-removal shaft</text>
+          <path d="M340 40 L 60 55" stroke="#B3654A" stroke-width="1" stroke-dasharray="2 3"/>
+          <path d="M20 105 L 300 85" stroke="#B3654A" stroke-width="1" stroke-dasharray="2 3"/>
+          <text x="330" y="35" fill="#B3654A" font-family="IBM Plex Mono" font-size="9">crews dug both ways</text>
+          <text x="235" y="315" fill="#C79A4B" font-family="IBM Plex Mono" font-size="9">tunnel, slope &lt; 1‰</text>
+        </svg>
+      </div>
+      <div class="diagram-cap" data-i18n="qanat-cap">Schematic — qanat construction: shafts sunk, then tunnels dug from both directions to meet</div>
+    </div>
+    <div data-reveal>
+      <div class="case-coord" data-i18n="qanat-coord">32.6567°N, 35.6825°E — Umm Qais (ancient Gadara)</div>
+      <h2><span class="site-en" data-i18n="qanat-title">Qanat Fir'aun — The Gadara Aqueduct</span></h2>
+      <div class="era" data-i18n="qanat-era">Roman · built 90–210 CE</div>
+      <p class="body-text" data-i18n="qanat-p1">
+        A 170-kilometer supply line built to bring water from reservoirs in modern-day Syria to
+        Gadara, a Decapolis city of about 50,000 people — <strong>the longest underground tunnel
+        built anywhere in antiquity</strong>, roughly 106 km of it cut through solid rock.
+      </p>
+      <p class="body-text" data-i18n="qanat-p2">
+        The tunnel was excavated using qanat technique: thousands of vertical shafts sunk at
+        intervals to reach the planned tunnel depth, with crews then cutting horizontally in both
+        directions from adjacent shafts until the sections met. Surveying had to hold to
+        <strong>gradients under one part per thousand</strong> across tens of kilometers — with no
+        laser levels, no GPS, and construction crews who couldn't see each other underground. It's a
+        tolerance problem that would be taken seriously on a modern tunnel-boring project.
+      </p>
+      <div class="notebook">
+        <div class="nb-title">Engineering Notebook</div>
+        <ul>
+          <li data-i18n="qanat-nb1"><span>Total length</span><span>170 km (≈106 km underground)</span></li>
+          <li data-i18n="qanat-nb2"><span>Build duration</span><span>~120 years, in stages</span></li>
+          <li data-i18n="qanat-nb3"><span>Typical slope</span><span>&lt; 1 ‰ over long sections</span></li>
+          <li data-i18n="qanat-nb4"><span>Core challenge</span><span>Independent survey alignment, two-way excavation</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= JERASH ================= -->
+<section class="case" id="jerash">
+  <div class="case-grid">
+    <div data-reveal>
+      <div class="case-coord" data-i18n="jerash-coord">32.2809°N, 35.8996°E — Jerash (ancient Gerasa)</div>
+      <h2><span class="site-en" data-i18n="jerash-title">The Water-Powered Stone Saw, Temple of Artemis</span></h2>
+      <div class="era" data-i18n="jerash-era">Byzantine · 6th century CE</div>
+      <p class="body-text" data-i18n="jerash-p1">
+        By the sixth century, the disused Temple of Artemis had become a quarry workshop. Excavators
+        found a mill race built to channel water onto a wheel, and — more strikingly —
+        <strong>limestone column drums scored with evenly spaced, dead-straight saw marks</strong>: the
+        signature of a mechanized cut, not hand sawing.
+      </p>
+      <p class="body-text" data-i18n="jerash-p2">
+        The reconstructed drive train is a <strong>crank-and-connecting-rod mechanism</strong> —
+        a slider-crank linkage — turning the wheel's continuous rotation into the back-and-forth
+        stroke a saw blade needs. It's the same fundamental linkage in a kinematics course today,
+        found here — and at sister sites in Ephesus and Hierapolis — centuries before this class of
+        mechanism was long assumed to have first appeared in medieval Europe.
+      </p>
+      <div class="notebook">
+        <div class="nb-title">Engineering Notebook</div>
+        <ul>
+          <li data-i18n="jerash-nb1"><span>Mechanism type</span><span>Slider-crank (rotary → reciprocating)</span></li>
+          <li data-i18n="jerash-nb2"><span>Power source</span><span>Water wheel, mill race</span></li>
+          <li data-i18n="jerash-nb3"><span>Evidence</span><span>Parallel, evenly spaced saw marks on stone drums</span></li>
+          <li data-i18n="jerash-nb4"><span>Significance</span><span>Among the earliest attested crank mechanisms anywhere</span></li>
+        </ul>
+      </div>
+    </div>
+    <div data-reveal>
+      <div class="diagram-box" id="mech-box" style="position:relative; cursor:grab; padding:0; overflow:hidden;">
+        <canvas id="mech-canvas"></canvas>
+        <div class="mech-readout">
+          <div><span data-i18n="mech-theta-lbl">θ (crank angle)</span><b id="mech-theta">0°</b></div>
+          <div><span data-i18n="mech-x-lbl">x (stroke position)</span><b id="mech-x">0.00</b></div>
+        </div>
+        <button id="mech-toggle" class="mech-btn" aria-label="Pause">❚❚</button>
+      </div>
+      <div class="diagram-cap" data-i18n="jerash-cap">Live model, driven by the slider-crank equation — drag to rotate, click ❚❚ to pause</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MISSION ================= -->
+<section class="mission" id="mission">
+  <div class="mission-inner" data-reveal>
+    <div class="eyebrow" data-i18n="mission-eyebrow">Why this exists</div>
+    <h2 data-i18n="mission-h2">An undergraduate's field notebook, built into an archive.</h2>
+    <p data-i18n="mission-p1">
+      This project started from a simple frustration: Jordan's engineering history is usually told as
+      archaeology or tourism, rarely as <strong>engineering</strong> — as a set of design decisions
+      someone had to get right, under real constraints, with the tools of their century.
+    </p>
+    <p data-i18n="mission-p2">
+      It's built and maintained by a mechanical engineering undergraduate at Mutah University, as a
+      long-term catalog rather than a finished product. Each site is treated as a case study: what
+      problem it solved, what the mechanism or system actually was, and what a modern engineer would
+      recognize in it.
+    </p>
+    <div class="roadmap">
+      <div><div class="rm-lbl" data-i18n="rm-lbl">Next</div><div class="rm-txt" data-i18n="rm1-txt">Add more sites — Roman dams, Umayyad desert-castle qanats, Decapolis mills</div></div>
+      <div><div class="rm-lbl" data-i18n="rm-lbl">Next</div><div class="rm-txt" data-i18n="rm2-txt">3D reconstructions of key mechanisms, built for the web</div></div>
+      <div><div class="rm-lbl" data-i18n="rm-lbl">Next</div><div class="rm-txt" data-i18n="rm3-txt">Full Arabic edition, published alongside the English one</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div data-i18n="footer-txt">Engineering Heritage Jordan — a growing archive, v1</div>
+  <div class="mark-ar">صُنع بعين مهندس أردني</div>
+</footer>
+
+<script>
+  const I18N = {
+  "nav-petra": {
+    "en": "Petra",
+    "ar": "البتراء"
+  },
+  "nav-qanat": {
+    "en": "Qanat Fir'aun",
+    "ar": "قناة فرعون"
+  },
+  "nav-jerash": {
+    "en": "Jerash",
+    "ar": "جرش"
+  },
+  "nav-about": {
+    "en": "About",
+    "ar": "عن المشروع"
+  },
+  "hero-eyebrow": {
+    "en": "An Engineer's Atlas of Ancient Jordan",
+    "ar": "أطلس هندسي لتراث الأردن القديم"
+  },
+  "hero-title": {
+    "en": "Before the textbooks, <em>Jordan built the machines.</em>",
+    "ar": "قبل أن تُكتب المناهج، <em>كان الأردن يبني الآلات.</em>"
+  },
+  "hero-title-ar": {
+    "en": "هندسة الأجداد — أرشيف هندسي لمنجزات الأجداد الميكانيكية والهيدروليكية",
+    "ar": "Engineering Heritage Jordan — an engineering archive of ancient mechanical and hydraulic works"
+  },
+  "hero-sub": {
+    "en": "A field-by-field engineering survey of the water systems, tunnels, and machines built across\n    Jordan between 300 BCE and 600 CE — read the way a <strong>mechanical engineer</strong> reads them:\n    through slope, torque, tolerance, and load.",
+    "ar": "مسح هندسي ميداني لأنظمة المياه والأنفاق والآلات التي بُنيت في الأردن\n    بين 300 ق.م و600 م — مقروءة بعين <strong>مهندس ميكانيكي</strong>: من خلال الميل\n    والعزم والتفاوت المسموح والحمل."
+  },
+  "scroll-cue": {
+    "en": "Three sites, so far",
+    "ar": "ثلاثة مواقع حتى الآن"
+  },
+  "stat1-num": {
+    "en": "170 km",
+    "ar": "١٧٠ كم"
+  },
+  "stat1-lbl": {
+    "en": "Longest known tunnel of antiquity",
+    "ar": "أطول نفق معروف في العالم القديم"
+  },
+  "stat2-num": {
+    "en": "30,000+",
+    "ar": "+٣٠,٠٠٠"
+  },
+  "stat2-lbl": {
+    "en": "People supplied by gravity alone, no pumps",
+    "ar": "نسمة تُروى بالجاذبية فقط، بدون مضخات"
+  },
+  "stat3-num": {
+    "en": "6th c. CE",
+    "ar": "القرن ٦ م"
+  },
+  "stat3-lbl": {
+    "en": "Earliest known crank-slider mechanism, Jerash",
+    "ar": "أقدم آلية كرنك-انزلاق موثقة، جرش"
+  },
+  "thesis-p": {
+    "en": "Every site here was designed by someone solving the same problems we're taught to solve today —\n    <span class=\"hl\">how to move a fluid, transmit a force, or convert motion</span> — centuries before the\n    vocabulary existed to name what they'd done.",
+    "ar": "كل موقع هنا صمّمه شخص كان يواجه نفس المسائل التي نُدرّس حلولها اليوم —\n    <span class=\"hl\">كيف تُحرّك سائلاً، أو تنقل قوة، أو تحوّل حركة</span> — قبل قرون طويلة من وجود\n    المصطلحات العلمية التي تصف ما فعلوه."
+  },
+  "petra-coord": {
+    "en": "30.3285°N, 35.4444°E — Ma'an Governorate",
+    "ar": "30.3285°N، 35.4444°E — محافظة معان"
+  },
+  "petra-title": {
+    "en": "The Petra Water System",
+    "ar": "نظام مياه البتراء"
+  },
+  "petra-era": {
+    "en": "Nabataean · c. 300 BCE – 300 CE",
+    "ar": "نبطي · نحو 300 ق.م – 300 م"
+  },
+  "petra-p1": {
+    "en": "Petra sits in a desert basin that receives almost no reliable rainfall — yet it sustained\n        <strong>a city of roughly 30,000 people</strong>. The Nabataeans solved this with a distribution\n        network, not a single structure: hillside catchment channels fed sandstone cisterns sealed\n        with a waterproof gypsum-lime plaster, diversion dams pulled destructive flash floods away\n        from the city center and into storage, and rock-cut or terracotta pipelines carried water\n        for kilometers into the urban core.",
+    "ar": "تقع البتراء في حوض صحراوي لا يكاد يهطل عليه مطر يُعتمد عليه — ومع ذلك عاشت فيها\n        <strong>مدينة يُقدَّر عدد سكانها بثلاثين ألف نسمة</strong>. حلّ الأنباط هذه المعضلة بشبكة توزيع متكاملة\n        لا بمنشأة واحدة: قنوات تجميع من سفوح التلال تغذّي صهاريج حجرية مطلية بطبقة عازلة\n        من الجص والجير، وسدود تحويلية تُبعد السيول المفاجئة المدمّرة عن قلب المدينة وتوجّهها\n        للتخزين، وأنابيب منحوتة بالصخر أو من الفخّار تنقل المياه لكيلومترات حتى وسط المدينة."
+  },
+  "petra-p2": {
+    "en": "The detail that reads as pure engineering: pipeline <strong>gradients were deliberately matched\n        to each spring's natural output</strong>, so the system moved exactly as much water as the source\n        could sustainably give — fast enough to stay usable, slow enough to avoid erosion and leakage.\n        No pumps, no external energy input. Just topography, read correctly.",
+    "ar": "والتفصيل الذي يُقرأ كهندسة خالصة: <strong>مُيول الأنابيب كانت تُضبط عمداً بما يتناسب مع\n        تصريف كل نبع طبيعي</strong>، بحيث ينقل النظام بالضبط القدر الذي يستطيع المصدر تقديمه باستدامة —\n        سريعاً بما يكفي ليبقى صالحاً للاستخدام، وبطيئاً بما يكفي لتفادي التآكل والتسرّب.\n        بلا مضخات، وبلا أي طاقة خارجية. مجرّد طبوغرافيا قُرئت بشكل صحيح."
+  },
+  "nb-title": {
+    "en": "Engineering Notebook",
+    "ar": "دفتر الملاحظات الهندسي"
+  },
+  "petra-nb1": {
+    "en": "<span>Mechanism</span><span>Gravity-fed open channel + closed pipeline</span>",
+    "ar": "<span>الآلية</span><span>قناة مفتوحة + أنبوب مغلق، بالجاذبية</span>"
+  },
+  "petra-nb2": {
+    "en": "<span>Design constraint</span><span>Flow matched to spring yield</span>",
+    "ar": "<span>القيد التصميمي</span><span>التصريف متوافق مع إنتاجية النبع</span>"
+  },
+  "petra-nb3": {
+    "en": "<span>Failure mode addressed</span><span>Flash flood diversion via barrage dams</span>",
+    "ar": "<span>وضع الفشل المعالَج</span><span>تحويل السيول عبر سدود حاجزة</span>"
+  },
+  "petra-nb4": {
+    "en": "<span>Sealing method</span><span>Gypsum-lime hydraulic plaster</span>",
+    "ar": "<span>طريقة العزل</span><span>ملاط هيدروليكي من الجص والجير</span>"
+  },
+  "petra-cap": {
+    "en": "Schematic — catchment → diversion → sealed storage → graded delivery",
+    "ar": "مخطط تخطيطي — تجميع ← تحويل ← تخزين معزول ← توصيل بميل محسوب"
+  },
+  "qanat-cap": {
+    "en": "Schematic — qanat construction: shafts sunk, then tunnels dug from both directions to meet",
+    "ar": "مخطط تخطيطي — طريقة القناة: حفر آبار رأسية، ثم حفر النفق من الاتجاهين حتى يلتقيا"
+  },
+  "qanat-coord": {
+    "en": "32.6567°N, 35.6825°E — Umm Qais (ancient Gadara)",
+    "ar": "32.6567°N، 35.6825°E — أم قيس (جدارة القديمة)"
+  },
+  "qanat-title": {
+    "en": "Qanat Fir'aun — The Gadara Aqueduct",
+    "ar": "قناة فرعون — قناة جدارة"
+  },
+  "qanat-era": {
+    "en": "Roman · built 90–210 CE",
+    "ar": "روماني · بُنيت بين 90–210 م"
+  },
+  "qanat-p1": {
+    "en": "A 170-kilometer supply line built to bring water from reservoirs in modern-day Syria to\n        Gadara, a Decapolis city of about 50,000 people — <strong>the longest underground tunnel\n        built anywhere in antiquity</strong>, roughly 106 km of it cut through solid rock.",
+    "ar": "خط إمداد بطول 170 كيلومتراً بُني لنقل المياه من خزانات في سوريا الحالية إلى جدارة،\n        إحدى مدن الديكابوليس التي بلغ عدد سكانها نحو خمسين ألف نسمة — <strong>وهو أطول نفق تحت الأرض\n        بُني في العالم القديم كله</strong>، إذ حُفر نحو 106 كم منه عبر الصخر الصلب."
+  },
+  "qanat-p2": {
+    "en": "The tunnel was excavated using qanat technique: thousands of vertical shafts sunk at\n        intervals to reach the planned tunnel depth, with crews then cutting horizontally in both\n        directions from adjacent shafts until the sections met. Surveying had to hold to\n        <strong>gradients under one part per thousand</strong> across tens of kilometers — with no\n        laser levels, no GPS, and construction crews who couldn't see each other underground. It's a\n        tolerance problem that would be taken seriously on a modern tunnel-boring project.",
+    "ar": "حُفر النفق بأسلوب \"القناة\": آلاف الآبار الرأسية حُفرت على فواصل منتظمة للوصول إلى\n        عمق النفق المخطَّط له، ثم قامت الطواقم بالحفر الأفقي من اتجاهين متقابلين انطلاقاً من الآبار\n        المتجاورة حتى تلتقي الأقسام. وكان على المساحين الالتزام <strong>بميول تقل عن جزء واحد بالألف</strong>\n        على امتداد عشرات الكيلومترات — بلا أجهزة ليزر، وبلا نظام تحديد مواقع، وطواقم بناء لا يرى\n        بعضها بعضاً تحت الأرض. إنها مسألة تفاوت مسموح تُؤخذ على محمل الجد في أي مشروع حفر أنفاق حديث."
+  },
+  "qanat-nb1": {
+    "en": "<span>Total length</span><span>170 km (≈106 km underground)</span>",
+    "ar": "<span>الطول الكلي</span><span>170 كم (نحو 106 كم تحت الأرض)</span>"
+  },
+  "qanat-nb2": {
+    "en": "<span>Build duration</span><span>~120 years, in stages</span>",
+    "ar": "<span>مدة البناء</span><span>نحو 120 عاماً، على مراحل</span>"
+  },
+  "qanat-nb3": {
+    "en": "<span>Typical slope</span><span>&lt; 1 ‰ over long sections</span>",
+    "ar": "<span>الميل النموذجي</span><span>أقل من 1 ‰ على مسافات طويلة</span>"
+  },
+  "qanat-nb4": {
+    "en": "<span>Core challenge</span><span>Independent survey alignment, two-way excavation</span>",
+    "ar": "<span>التحدي الجوهري</span><span>محاذاة مساحية مستقلة، حفر من اتجاهين</span>"
+  },
+  "jerash-coord": {
+    "en": "32.2809°N, 35.8996°E — Jerash (ancient Gerasa)",
+    "ar": "32.2809°N، 35.8996°E — جرش (جراسا القديمة)"
+  },
+  "jerash-title": {
+    "en": "The Water-Powered Stone Saw, Temple of Artemis",
+    "ar": "منشرة الحجر المائية، معبد أرتميس"
+  },
+  "jerash-era": {
+    "en": "Byzantine · 6th century CE",
+    "ar": "بيزنطي · القرن السادس الميلادي"
+  },
+  "jerash-p1": {
+    "en": "By the sixth century, the disused Temple of Artemis had become a quarry workshop. Excavators\n        found a mill race built to channel water onto a wheel, and — more strikingly —\n        <strong>limestone column drums scored with evenly spaced, dead-straight saw marks</strong>: the\n        signature of a mechanized cut, not hand sawing.",
+    "ar": "بحلول القرن السادس، كان معبد أرتميس المهجور قد تحوّل إلى ورشة محجر. عثر المنقّبون\n        على مجرى مائي بُني لتوجيه الماء نحو عجلة، والأهم من ذلك —\n        <strong>أسطوانات أعمدة من الحجر الجيري محزّزة بعلامات نشر متساوية المسافات ومستقيمة تماماً</strong>:\n        وهي بصمة القطع الآلي، لا النشر اليدوي."
+  },
+  "jerash-p2": {
+    "en": "The reconstructed drive train is a <strong>crank-and-connecting-rod mechanism</strong> —\n        a slider-crank linkage — turning the wheel's continuous rotation into the back-and-forth\n        stroke a saw blade needs. It's the same fundamental linkage in a kinematics course today,\n        found here — and at sister sites in Ephesus and Hierapolis — centuries before this class of\n        mechanism was long assumed to have first appeared in medieval Europe.",
+    "ar": "ومجموعة الدفع المُعاد بناؤها هي <strong>آلية كرنك مع ذراع توصيل</strong> —\n        وصلة كرنك-انزلاق — تحوّل الدوران المستمر للعجلة إلى شوط ذهاب وإياب تحتاجه شفرة النشر.\n        وهي نفس الوصلة الأساسية التي تُدرَّس اليوم في مواد الحركة الآلية (Kinematics)، ووُجدت هنا —\n        وفي موقعين شقيقين بأفسس وهيرابوليس — قبل قرون طويلة من الافتراض السائد بأن هذا النوع\n        من الآليات ظهر لأول مرة في أوروبا في العصور الوسطى."
+  },
+  "jerash-nb1": {
+    "en": "<span>Mechanism type</span><span>Slider-crank (rotary → reciprocating)</span>",
+    "ar": "<span>نوع الآلية</span><span>كرنك-انزلاق (دوران ← حركة ترددية)</span>"
+  },
+  "jerash-nb2": {
+    "en": "<span>Power source</span><span>Water wheel, mill race</span>",
+    "ar": "<span>مصدر الطاقة</span><span>عجلة مائية، مجرى طاحون</span>"
+  },
+  "jerash-nb3": {
+    "en": "<span>Evidence</span><span>Parallel, evenly spaced saw marks on stone drums</span>",
+    "ar": "<span>الدليل</span><span>علامات نشر متوازية ومتساوية المسافات على أسطوانات حجرية</span>"
+  },
+  "jerash-nb4": {
+    "en": "<span>Significance</span><span>Among the earliest attested crank mechanisms anywhere</span>",
+    "ar": "<span>الأهمية</span><span>من أقدم آليات الكرنك الموثقة في العالم</span>"
+  },
+  "mech-theta-lbl": {
+    "en": "θ (crank angle)",
+    "ar": "θ (زاوية الكرنك)"
+  },
+  "mech-x-lbl": {
+    "en": "x (stroke position)",
+    "ar": "x (موضع الشوط)"
+  },
+  "jerash-cap": {
+    "en": "Live model, driven by the slider-crank equation — drag to rotate, click ❚❚ to pause",
+    "ar": "نموذج حي، مبني على معادلة الكرنك-انزلاق — اسحب لتدوير العرض، اضغط ❚❚ للإيقاف"
+  },
+  "mission-eyebrow": {
+    "en": "Why this exists",
+    "ar": "لماذا هذا المشروع"
+  },
+  "mission-h2": {
+    "en": "An undergraduate's field notebook, built into an archive.",
+    "ar": "دفتر ملاحظات طالب جامعي، تحوّل إلى أرشيف."
+  },
+  "mission-p1": {
+    "en": "This project started from a simple frustration: Jordan's engineering history is usually told as\n      archaeology or tourism, rarely as <strong>engineering</strong> — as a set of design decisions\n      someone had to get right, under real constraints, with the tools of their century.",
+    "ar": "بدأ هذا المشروع من ملاحظة بسيطة: تاريخ الأردن الهندسي عادة ما يُروى كآثار أو سياحة،\n      نادراً ما يُروى <strong>كهندسة</strong> — كمجموعة قرارات تصميمية كان على أحدهم أن يتقنها،\n      تحت قيود حقيقية، وبأدوات عصره."
+  },
+  "mission-p2": {
+    "en": "It's built and maintained by a mechanical engineering undergraduate at Mutah University, as a\n      long-term catalog rather than a finished product. Each site is treated as a case study: what\n      problem it solved, what the mechanism or system actually was, and what a modern engineer would\n      recognize in it.",
+    "ar": "يبنيه ويشرف عليه طالب هندسة ميكانيكية في جامعة مؤتة، كأرشيف طويل الأمد\n      لا كمنتج نهائي. كل موقع يُعامَل كدراسة حالة: ما المشكلة التي حلّها، وما الآلية أو النظام\n      الفعلي المستخدم، وما الذي سيتعرّف عليه أي مهندس اليوم فيه."
+  },
+  "rm-lbl": {
+    "en": "Next",
+    "ar": "قادم"
+  },
+  "rm1-txt": {
+    "en": "Add more sites — Roman dams, Umayyad desert-castle qanats, Decapolis mills",
+    "ar": "إضافة مواقع جديدة — سدود رومانية، قنوات قصور الصحراء الأموية، طواحين الديكابوليس"
+  },
+  "rm2-txt": {
+    "en": "3D reconstructions of key mechanisms, built for the web",
+    "ar": "نماذج ثلاثية الأبعاد لأهم الآليات، مبنية خصيصاً للويب"
+  },
+  "rm3-txt": {
+    "en": "Full Arabic edition, published alongside the English one",
+    "ar": "توثيق فيديوهات ورسوم متحركة تشرح كل آلية خطوة بخطوة"
+  },
+  "footer-txt": {
+    "en": "Engineering Heritage Jordan — a growing archive, v1",
+    "ar": "هندسة الأجداد — أرشيف متنامٍ، الإصدار 1"
+  }
+};
+  function applyLang(lang){
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const entry = I18N[el.getAttribute('data-i18n')];
+      if(!entry) return;
+      const val = entry[lang] || entry.en;
+      if(el.namespaceURI === 'http://www.w3.org/2000/svg'){
+        el.textContent = val;
+      } else {
+        el.innerHTML = val;
+      }
+    });
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.body.classList.toggle('lang-ar', lang === 'ar');
+    const btn = document.getElementById('lang-toggle');
+    if(btn) btn.textContent = lang === 'ar' ? 'English' : 'العربية';
+  }
+  let currentLang = 'en';
+  const langBtn = document.getElementById('lang-toggle');
+  if(langBtn){
+    langBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'ar' : 'en';
+      applyLang(currentLang);
+    });
+  }
+</script>
+
+<script>
+  const els = document.querySelectorAll('[data-reveal]');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, {threshold:.15});
+  els.forEach(el=>io.observe(el));
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const box = document.getElementById('mech-box');
+  const canvas = document.getElementById('mech-canvas');
+  if(!box || !canvas || typeof THREE === 'undefined') return;
+
+  const colors = { water:0x4C8A7E, bronze:0xC79A4B, stone:0xB3654A, parchment:0xEDE3CF, line:0x3A3428 };
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.set(0, 1.4, 9);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const key = new THREE.DirectionalLight(0xffffff, 0.9);
+  key.position.set(4, 5, 6);
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0x4C8A7E, 0.5);
+  rim.position.set(-5, 2, -4);
+  scene.add(rim);
+
+  const rig = new THREE.Group();
+  scene.add(rig);
+
+  // --- water wheel (rotates about Z, faces camera) ---
+  const wheelGroup = new THREE.Group();
+  wheelGroup.position.set(-2.6, 0, 0);
+  rig.add(wheelGroup);
+
+  const R = 1.15; // crank radius
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,0.5,20), new THREE.MeshStandardMaterial({color:colors.bronze, metalness:.3, roughness:.5}));
+  hub.rotation.x = Math.PI/2;
+  wheelGroup.add(hub);
+
+  const rimRing = new THREE.Mesh(new THREE.TorusGeometry(R, 0.05, 10, 40), new THREE.MeshStandardMaterial({color:colors.water, metalness:.2, roughness:.6}));
+  wheelGroup.add(rimRing);
+
+  for(let i=0;i<10;i++){
+    const paddle = new THREE.Mesh(new THREE.BoxGeometry(0.06, R*0.9, 0.34), new THREE.MeshStandardMaterial({color:colors.water, roughness:.7}));
+    const a = (i/10)*Math.PI*2;
+    paddle.position.set(Math.cos(a)*R*0.5, Math.sin(a)*R*0.5, 0);
+    paddle.rotation.z = a;
+    wheelGroup.add(paddle);
+  }
+
+  // crank arm
+  const crankArm = new THREE.Mesh(new THREE.BoxGeometry(R, 0.09, 0.09), new THREE.MeshStandardMaterial({color:colors.bronze, metalness:.4, roughness:.4}));
+  wheelGroup.add(crankArm);
+  const pin = new THREE.Mesh(new THREE.SphereGeometry(0.08,16,16), new THREE.MeshStandardMaterial({color:colors.stone}));
+  wheelGroup.add(pin);
+
+  // connecting rod
+  const L = 3.4; // rod length
+  const rod = new THREE.Mesh(new THREE.BoxGeometry(1, 0.09, 0.09), new THREE.MeshStandardMaterial({color:colors.parchment, roughness:.5}));
+  rig.add(rod);
+
+  // slider block + saw blade
+  const sliderGroup = new THREE.Group();
+  rig.add(sliderGroup);
+  const slider = new THREE.Mesh(new THREE.BoxGeometry(0.5,0.35,0.35), new THREE.MeshStandardMaterial({color:colors.stone, roughness:.6}));
+  sliderGroup.add(slider);
+  const blade = new THREE.Mesh(new THREE.BoxGeometry(0.9,0.55,0.03), new THREE.MeshStandardMaterial({color:0xdedede, metalness:.7, roughness:.25}));
+  blade.position.set(0.55,0,0);
+  sliderGroup.add(blade);
+
+  // rail
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(4.6,0.05,0.05), new THREE.MeshStandardMaterial({color:colors.line}));
+  rail.position.set(sliderGroup.position.x + 1.0, -0.5, 0);
+  rig.add(rail);
+
+  // stone block being cut
+  const stoneBlock = new THREE.Mesh(new THREE.BoxGeometry(1.1,1.1,0.9), new THREE.MeshStandardMaterial({color:0xC9BFA6, roughness:.85}));
+  stoneBlock.position.set(3.5, 0, 0);
+  rig.add(stoneBlock);
+
+  const thetaEl = document.getElementById('mech-theta');
+  const xEl = document.getElementById('mech-x');
+
+  let theta = 0;
+  let playing = true;
+  const speed = 1.1; // rad/s
+
+  function layout(){
+    const cx = wheelGroup.position.x, cy = 0;
+    const pinX = cx + Math.cos(theta) * R;
+    const pinY = cy + Math.sin(theta) * R;
+    crankArm.position.set(Math.cos(theta)*R/2, Math.sin(theta)*R/2, 0);
+    crankArm.rotation.z = theta;
+    pin.position.set(Math.cos(theta)*R, Math.sin(theta)*R, 0);
+
+    // slider-crank equation: x = r cosθ + sqrt(L^2 - (r sinθ)^2), measured from wheel center
+    const sy = Math.sin(theta) * R;
+    const sliderX = cx + Math.cos(theta)*R + Math.sqrt(Math.max(L*L - sy*sy, 0));
+    sliderGroup.position.set(sliderX, 0, 0);
+    stoneBlock.position.set(sliderX + 1.6, 0, 0);
+
+    const dx = sliderX - pinX, dy = 0 - pinY;
+    const rodLen = Math.sqrt(dx*dx + dy*dy);
+    rod.scale.x = rodLen;
+    rod.position.set(pinX + dx/2, pinY + dy/2, 0);
+    rod.rotation.z = Math.atan2(dy, dx);
+
+    if(thetaEl) thetaEl.textContent = Math.round((theta*180/Math.PI)%360) + '°';
+    if(xEl) xEl.textContent = sliderX.toFixed(2);
+  }
+  layout();
+
+  // manual orbit via pointer drag
+  let dragging=false, lastX=0, lastY=0, az=0.15, el=0.06;
+  function applyOrbit(){
+    const dist = 9;
+    camera.position.x = Math.sin(az)*dist;
+    camera.position.z = Math.cos(az)*dist;
+    camera.position.y = 1.4 + el*4;
+    camera.lookAt(0.4,0,0);
+  }
+  applyOrbit();
+  box.addEventListener('pointerdown', e=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; box.style.cursor='grabbing'; });
+  window.addEventListener('pointerup', ()=>{ dragging=false; box.style.cursor='grab'; });
+  window.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    az += (e.clientX-lastX)*0.006;
+    el = Math.max(-0.5, Math.min(0.7, el + (e.clientY-lastY)*-0.004));
+    lastX=e.clientX; lastY=e.clientY;
+    applyOrbit();
+  });
+
+  const toggleBtn = document.getElementById('mech-toggle');
+  if(toggleBtn) toggleBtn.addEventListener('click', ()=>{
+    playing = !playing;
+    toggleBtn.textContent = playing ? '❚❚' : '►';
+  });
+
+  function resize(){
+    const w = box.clientWidth, h = box.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  let last = performance.now();
+  function tick(now){
+    const dt = Math.min((now-last)/1000, 0.05); last = now;
+    if(playing){ theta += dt*speed; layout(); }
+    if(!dragging) az += dt*0.03; applyOrbit();
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+
+</body>
+</html>
